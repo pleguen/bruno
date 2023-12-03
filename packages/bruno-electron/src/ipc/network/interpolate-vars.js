@@ -1,5 +1,6 @@
 const { interpolate } = require('@usebruno/common');
 const { each, forOwn, cloneDeep, find } = require('lodash');
+const interpolateEnvVars = require('./interpolate-env-vars');
 
 const getContentType = (headers = {}) => {
   let contentType = '';
@@ -13,20 +14,7 @@ const getContentType = (headers = {}) => {
 };
 
 const interpolateVars = (request, envVars = {}, collectionVariables = {}, processEnvVars = {}) => {
-  // we clone envVars because we don't want to modify the original object
-  envVars = cloneDeep(envVars);
-
-  // envVars can inturn have values as {{process.env.VAR_NAME}}
-  // so we need to interpolate envVars first with processEnvVars
-  forOwn(envVars, (value, key) => {
-    envVars[key] = interpolate(value, {
-      process: {
-        env: {
-          ...processEnvVars
-        }
-      }
-    });
-  });
+  envVars = interpolateEnvVars(processEnvVars, envVars);
 
   const _interpolate = (str) => {
     if (!str || !str.length || typeof str !== 'string') {
