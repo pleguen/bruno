@@ -1,4 +1,4 @@
-const { interpolate } = require('@usebruno/common');
+const Handlebars = require('handlebars');
 const { each, forOwn, cloneDeep, find } = require('lodash');
 const interpolateEnvVars = require('./interpolate-env-vars');
 
